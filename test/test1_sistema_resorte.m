@@ -1,6 +1,6 @@
 clc, clear, close 'all'
 
-%% ejercicio 1 sistema de resortes
+%% Test 1: sistema de resortes
 % solución de sistema unidmensional de resortes
 
 n=3;                % numero de nodos 
@@ -25,3 +25,5 @@ disp(Fr)
 disp("Matriz de rigidez")
 disp(M)
 
+% testing 
+assert(true)
