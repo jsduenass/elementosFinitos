@@ -1,13 +1,13 @@
 %% Test elemento trust en plano bidimensional
-
+% tres barras conectadas en un mismo plano 
 clear, clc, close all
 
 % link truss
-nodos=csvread( "nodos.csv");
+nodos=csvread( "ej3_nodos.csv");
 sz=size(nodos)
 n=sz(1)
 
-conectividades = csvread( "conectividad2.csv")            
+conectividades = csvread( "ej3_conectividad.csv")            
 
 restricciones=[1,2,4,3,6,9];           % indice de grados de libertad restrigidos
 
