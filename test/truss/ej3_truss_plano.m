@@ -4,17 +4,17 @@ clear, clc, close all
 
 % link truss
 nodos=csvread( "ej3_nodos.csv");
-sz=size(nodos)
-n=sz(1)
+sz=size(nodos);
+n=sz(1);
 
 conectividades = csvread( "ej3_conectividad.csv")            
+dof=2;                                          % grados de libertad
+restricciones=[3,4,5,6,7,8];                    % indice de grados de libertad restrigidos
 
-restricciones=[1,2,4,3,6,9];           % indice de grados de libertad restrigidos
+Fe=zeros(n,dof);
+Fe(1,2)=-18;
 
-Fe=zeros(n,3);
-Fe(3,2)=500;
-
-[u,Fr,M]= Truss(n,nodos,conectividades,restricciones,Fe);
+[u,Fr,M]= Truss(n,dof,nodos,conectividades,restricciones,Fe);
 
 disp("Fuerzas de reacción")
 disp(Fr)

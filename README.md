@@ -17,3 +17,7 @@ elementos tipo truss
 
 ## Documentación 
 Para la documentación se utiliza un archivo _livescript_ el cual sera exportado a formato html y PDF 
+
+## a desarrollar
+[] Compatibilidad con entrada gmsh y salida pos
+[] Elementos tipo frame
