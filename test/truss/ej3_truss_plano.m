@@ -14,7 +14,7 @@ restricciones=[3,4,5,6,7,8];                    % indice de grados de libertad r
 Fe=zeros(n,dof);
 Fe(1,2)=-18;
 
-[u,Fr,M]= Truss(n,dof,nodos,conectividades,restricciones,Fe);
+[u,Fr,sigma,M]= Truss(n,dof,nodos,conectividades,restricciones,Fe);
 
 disp("Fuerzas de reacción")
 disp(Fr)
