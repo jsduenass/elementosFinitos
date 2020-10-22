@@ -87,6 +87,15 @@ k=350;                        % constante de resorte
 plot(t,y)
 legend(["pos","velocidad"])
 
+%% Aire
+rho = 1.19;
+v1 = [1,1];%Modificar
+area_frontal = 1;%Modificar
+Cd = 0.82;
+
+Fd = -1/2* rho * norm(v1) * area_frontal * Cd * v1;
+
+%% Gráficas
 figure()
 
 xmin=min(y(:,1));
@@ -115,6 +124,7 @@ for k=1:length(t)
     
 end
 
+%% Funciones
 function dy=eq_movimiento(t,y,k,m)
     M=[0,  1;
       -k/m,0];
