@@ -3,7 +3,7 @@ clc
 close all
 
 L = 8; % Longitud de la cuerda
-n = 100; % Numero de elementos
+n = 200; % Numero de elementos
 th = 0.1; % Grosor de la cuerda
 m = 10; % Masa total de la cuerda
 
@@ -19,12 +19,35 @@ a = double(vpasolve(2*sinh(alpha*d/2)==alpha*sqrt(L^2-lambda^2), alpha,10));
 
 u = fsolve(@(u)catenary(u,a,P0,Pf),P0);
 
-t = linspace(P0(1),Pf(1),n);
-y=1/a*cosh(a*(t+u(1)))+u(2);
+x = linspace(P0(1),Pf(1),n);
+y=1/a*cosh(a*(x+u(1)))+u(2);
 
-plot(t,y)
+angulo=atan2(diff(y),diff(x));
+xb=0;       yb=0;
+le=L/n;
+
+
+for k=1:n-1 
+    
+    xc(k)=le/2*cos(angulo(k))+ xb(k) ;
+    yc(k)=le/2*sin(angulo(k))+ yb(k);
+    
+    xb(k+1)=xb(k)+le*cos(angulo(k));
+    yb(k+1)=yb(k)+le*sin(angulo(k));
+end
+
+plot(x,y,":")
+hold on 
+plot(xc,yc,"o")
+plot(xb,yb)
+
+axis equal
+%set(gca,'DataAspectRatio',[1 1 1])
+
+
 
 function F = catenary(u,a,P0,Pf)
     F(1) = 1/a*cosh(a*(P0(1)+u(1)))+u(2)-P0(2);
     F(2) = 1/a*cosh(a*(Pf(1)+u(1)))+u(2)-Pf(2);
 end
+
