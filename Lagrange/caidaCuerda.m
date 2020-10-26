@@ -35,6 +35,8 @@ end
 
 %plot(x,y)
 plot(xb,yb)
+hold on
+plot(xb,yb,'m.')
 axis equal
 hold on 
 scatter(xc,yc)

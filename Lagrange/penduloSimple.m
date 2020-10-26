@@ -1,15 +1,15 @@
 clc, clear, close all
-%% pendulo simple
+% pendulo simple
 
 tspan=linspace(0,6,500);   % tiempo
 dt=tspan(2);
-y0=[85*pi/180;0];
+y0=[88*pi/180;0];
 le=10;
 m=10;
 I=10;
 g=9.81;
 
-[t,y] = ode45(@(t,y)penduloSimple(t,y,le,m,I,g), tspan, y0);
+[t,y] = ode45(@(t,y)penduloSimple1(t,y,le,m,I,g), tspan, y0);
 
 rc=le/2*[cos(y(:,1)),sin(y(:,1))];
 xc=rc(:,1);     yc=rc(:,2);
@@ -28,4 +28,11 @@ for k=1:length(t)
     set(gca,'DataAspectRatio',[1 1 1])
     hold off
     pause(dt)
+end
+
+function dy=penduloSimple1(t,y,le,m,I,g)
+    phi=y(1);   dphi=y(2);
+    
+    dy=[           dphi           ;
+        -2*le*m*g/(le*m+4*I)*cos(phi)];
 end
