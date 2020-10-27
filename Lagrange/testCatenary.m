@@ -15,6 +15,24 @@ P0 = [0,0];
 Pf = [40.5,10];
 display=true;
 [angulo,x,y,time]=Catenaria(L,n,P0,Pf,display);
-help Catenaria
+%help Catenaria
+%assert(all(diff(x)>0))
+hold on
+%% Test 2: Catenaria 
 
-assert(all(diff(x)>0))
+L = 400; 
+n = 50; 
+Pf = [10,-10]; 
+P0 = [40,-20]; 
+display = true;
+[angulo,x,y,time]=Catenaria(L,n,P0,Pf,display);
+hold on
+%% Test 3: Catenaria 
+
+L = 20.0001; 
+n = 50; 
+P0 = [-10,0]; 
+Pf = [10,0]; 
+display = true;
+[angulo,x,y,time]=Catenaria(L,n,P0,Pf,display);
+hold on
