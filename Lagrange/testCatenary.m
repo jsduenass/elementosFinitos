@@ -15,6 +15,6 @@ P0 = [0,0];
 Pf = [40.5,10];
 display=true;
 [angulo,x,y,time]=Catenaria(L,n,P0,Pf,display);
-
+help Catenaria
 
 assert(all(diff(x)>0))
