@@ -1,20 +1,29 @@
-function [u,Fr,sigma,K]= Truss(n,dof,nodos,conectividades,restricciones,Fe)
-% modelación de elementos tipo trust 3 en tres dimensiones 
-%(3 dof)degrees of freedom donde:
-% n-> numero de nodos
-% nodos -> matriz de coordenadas de nodos nodos(i,:)=[xi,yi,zi]  
-% conetividades -> conetividades(i,:)=[indiceNodoA, indiceNodoB, constante de rigidez k]
-% restriccones-> lista de indices de grados de libertad restringidos
+function [u,Fr,sigma,K]= Truss(nodos,conectividades,restricciones,Fe)
+% modelación de elementos tipo trust en 1, 2 o 3 dimensiones
+% nodos -> matriz  de coordenadas.   nodos(i,:)=[xi,yi,zi]  
+% conetividades -> matriz de propiedades
+% conetividades(i,:)=[NodosA,  NodosB, Area, E,Le]
+%                     NodosA -> indice nodos de partida, 
+%                     NodosB -> indice nodos de llegada, 
+%                         A  ->  Area transversal, 
+%                         E  ->  Modulo Elasticidad
+%                         Le ->  logitud del elemento
+% restricciones-> lista de indices de grados de libertad restringidos
 % Fe-> fuerzas externas aplicadas Fe(i,:)=[Fxi,Fyi,Fzi]
-
-    K=zeros(dof*n,dof*n);    % Matriz de rigidez
-    Fe=reshape(Fe',[dof*n,1]);
+    
+    n=size(nodos,1)    % numero de nodos    
+    dim=size(nodos,2);          % numero de dimensiones por nodo
+   
+    
+    K=zeros(dim*n,dim*n);       % Matriz global de rigidez
+    Fe=reshape(Fe',[dim*n,1]);
     
     %---conetividades---   
     NodosA= conectividades(:,1);        % vector nodos de partida de conectividad 
     NodosB= conectividades(:,2);        % vector nodos de llegada de conectividad
     Area= conectividades(:,3);          % vector de area transversal de elemento  
     E=conectividades(:,4);              % vector de modulo de elasticidad
+    Le=[];                              % vector de longitud de elemento
     rigidez=[];                         % vector de constantes de rigidez
     
     for c=1:length(NodosA)
@@ -23,47 +32,48 @@ function [u,Fr,sigma,K]= Truss(n,dof,nodos,conectividades,restricciones,Fe)
 
         ri=nodos(i,:)';                    % vector de posición nodo A
         rj=nodos(j,:)';                    % vector de posición nodo B
-        longitud=norm(rj-ri);              % longitud de elemento
-        k=Area(c)*E(c)/longitud;           % constante de rigidez del elemento
-        rigidez(c)=k;                       
+        Le(c)=norm(rj-ri);                 % Le de elemento
+        ke=Area(c)*E(c)/Le(c);             % constante de rigidez del elemento
+        rigidez(c)=ke;                       
         
         %visualización 
 %         v=[ri,rj];
 %         plot3(v(1,:),v(2,:),v(3,:))
 %         hold on
 %         
-        uni=(rj-ri)'./norm(rj-ri);              %vector de cosenos directores  [l,m,n]
+        uni=(rj-ri)'./norm(rj-ri);         % vector de cosenos directores  [l,m,n]
         
         L=[uni, zeros(size(uni));zeros(size(uni)),uni];		% matriz de giro
 
-        Ki=L'*k*[1,-1;-1,1]*L;                 % matriz de rigidez en coordenadas globales
+        Ki=L'*ke*[1,-1;-1,1]*L;            % matriz de rigidez en coordenadas globales
 
-        eqA= dof*(i-1)+1:dof*i;             % indices de ecuaciones relacionadas al nodo A
+        eqA= dim*i-(dim-1:-1:0);           % indices de ecuaciones relacionadas al nodo A
+             
+        eqB= dim*j-(dim-1:-1:0);           % indices de ecuaciones relacionadas al nodo B
 
-        eqB= dof*(j-1)+1:dof*j;             % indices de ecuaciones relacionadas al nodo B
-
-
+    dim*NodosB-(dim-1:-1:0)
         % adicion a la matriz global
         K([eqA,eqB],[eqA,eqB])=K([eqA,eqB],[eqA,eqB]) + Ki;
 
     end
  
      %---Restricciones--- 
-    kP=10^10*max(abs(rigidez));       % Penalización
-    KP=K;
+    k_p=10^10*max(abs(rigidez));           % factor de penalización
+    KP=K;                                  % matriz de rigidez penalizada
     for R=restricciones
-        KP(R,R)=KP(R,R)+ kP;    
-        KP(R,:)=KP(R,:)/kP;
+        KP(R,R)=KP(R,R)+ k_p;    
+        KP(R,:)=KP(R,:)/k_p;
     end
+    
     %---Deformaciones---
     u=mldivide(KP,Fe);
     
     %-- Fuerzas de reacción
-    %Fr=-kP*u(restricciones); 
+    %Fr=-k_p*u(restricciones); 
     Fr= K*u; 
     
     %--- esfuerzo normal ---
-    u_prima=reshape(u,dof,n)
+    u_prima=reshape(u,dim,n)
     
-    sigma=rigidez.*vecnorm(u_prima(:,NodosB)-u_prima(:,NodosA))./Area';
+    sigma=rigidez.*Le./Area';
 end

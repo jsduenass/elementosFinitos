@@ -1,3 +1,6 @@
 % script de verificación de resultados de los tests 
-
-results= runtests("test1_sistema_resorte.m")
+runChecks(currentProject)
+cases=["test1_sistema_resorte.m",
+        "truss/test3_truss_plano.m"];
+    
+results=runtests(cases)

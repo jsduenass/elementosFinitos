@@ -1,8 +1,39 @@
 # elementosFinitos
-Una serie de implementaciones de las ecuaciones y formulas para entender las bases de los elementos finitos.
+Este repositorio es un trabajo en progreso donde se desea recopilar una serie de implementaciones de las ecuaciones y formulas para entender las bases de los elementos finitos.
+
+## Contenido
+Esta conformado por las implementaciones:
+* sistema_resorte (__completado__): solución de deflecciones y reacciones un sistema de resortes interconectados.     
+* truss (__ en desarrollo__): solución para elementos tipo truss (elementos con cargas axiales) en 1, 2 o 3 dimensiones. 
+* Beam (__ en desarrollo__): solución para elementos tipo viga
+* Frame (__ en desarrollo__): solución para elementos tipo Frame (uniones rigidas, elementos experimenta deflecciones y  momentos) 
+
+## a desarrollar
+[] Compatibilidad con entrada gmsh y salida pos
+[] Elementos tipo frame
 
 ## Sobre este proyecto
-Este proyecto utiliza herraminetas de control de versiones, la filosofia de CI (continuos integration/ integración continua) y la validación del codigo mediante tests para brindar un codigo robusto. Ademas esta contenido en un proyecto de matlab. 
+Esta organizado en forma de proyecto de matlab, para inicializarlo se realiza doble click sobre el archivo ```ElementosFinitos.prj``` en el explorar de archivos  o se puede escribir escribir el siguiente comando en consola.
+
+```    
+    openProject ElementosFinitos.prj
+```
+
+Para verificar el correcto funcionamiento del proyecto:
+
+```    
+    projEF=currentProject
+```
+
+### Configuración del proyecto
+A continuación se ilustran los comandos que fueron utilizados al momento de configurar el proyecto 
+```
+check = fullfile("test","verificacion.m");
+addFile(projEF,check)
+addStartupFile(projEF,check)
+```
+
+utiliza herramientas de control de versiones, la filosofia de CI (continuos integration/ integración continua) y la validación del codigo mediante tests para brindar un codigo robusto. Ademas esta contenido en un proyecto de matlab. 
 
 para ver mas información sobre como integrar control de versiones o CI en matlab ver los siguientes videos.
 
@@ -10,14 +41,9 @@ para ver mas información sobre como integrar control de versiones o CI en matla
 * [documentación git en matlab](https://es.mathworks.com/help/matlab/matlab_prog/set-up-git-source-control.html)
 
 
-## Contenido
-sistema de resortes 
-
-elementos tipo truss
 
 ## Documentación 
 Para la documentación se utiliza un archivo _livescript_ el cual sera exportado a formato html y PDF 
 
-## a desarrollar
-[] Compatibilidad con entrada gmsh y salida pos
-[] Elementos tipo frame
+
+
