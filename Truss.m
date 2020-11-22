@@ -11,8 +11,7 @@ function [u,Fr,sigma,K]= Truss(nodos,conectividades,restricciones,Fe)
 % restricciones-> lista de indices de grados de libertad restringidos
 % Fe-> fuerzas externas aplicadas Fe(i,:)=[Fxi,Fyi,Fzi]
     
-    n=size(nodos,1)    % numero de nodos    
-    dim=size(nodos,2);          % numero de dimensiones por nodo
+    [n,dim]=size(nodos);        % numero de nodos, numero de dimensiones por nodo
    
     
     K=zeros(dim*n,dim*n);       % Matriz global de rigidez
@@ -51,13 +50,13 @@ function [u,Fr,sigma,K]= Truss(nodos,conectividades,restricciones,Fe)
              
         eqB= dim*j-(dim-1:-1:0);           % indices de ecuaciones relacionadas al nodo B
 
-    dim*NodosB-(dim-1:-1:0)
+    
         % adicion a la matriz global
         K([eqA,eqB],[eqA,eqB])=K([eqA,eqB],[eqA,eqB]) + Ki;
 
     end
  
-     %---Restricciones--- 
+    %---Restricciones--- 
     k_p=10^10*max(abs(rigidez));           % factor de penalización
     KP=K;                                  % matriz de rigidez penalizada
     for R=restricciones
@@ -70,10 +69,11 @@ function [u,Fr,sigma,K]= Truss(nodos,conectividades,restricciones,Fe)
     
     %-- Fuerzas de reacción
     %Fr=-k_p*u(restricciones); 
-    Fr= K*u; 
+    Fr= K*u-Fe; 
     
     %--- esfuerzo normal ---
-    u_prima=reshape(u,dim,n)
+    eqA=dim*NodosA-(dim-1:-1:0);
+    eqB=dim*NodosB-(dim-1:-1:0);
     
-    sigma=rigidez.*Le./Area';
+    sigma=E.*vecnorm(u(eqA)-u(eqB),2,2)./Le';
 end

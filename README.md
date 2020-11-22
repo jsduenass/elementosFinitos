@@ -4,9 +4,10 @@ Este repositorio es un trabajo en progreso donde se desea recopilar una serie de
 ## Contenido
 Esta conformado por las implementaciones:
 * sistema_resorte (__completado__): solución de deflecciones y reacciones un sistema de resortes interconectados.     
-* truss (__ en desarrollo__): solución para elementos tipo truss (elementos con cargas axiales) en 1, 2 o 3 dimensiones. 
-* Beam (__ en desarrollo__): solución para elementos tipo viga
-* Frame (__ en desarrollo__): solución para elementos tipo Frame (uniones rigidas, elementos experimenta deflecciones y  momentos) 
+* truss (__completado__): solución para elementos tipo truss (elementos con cargas axiales) en 1, 2 o 3 dimensiones. 
+* Beam (__completado__): solución para elementos tipo viga
+* Frame (__en desarrollo__): solución para elementos tipo Frame (uniones rigidas, elementos experimenta deflecciones y  momentos) 
+
 
 ## a desarrollar
 [] Compatibilidad con entrada gmsh y salida pos
