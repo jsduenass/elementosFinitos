@@ -20,34 +20,25 @@ function [angulo,x,y,time]=Catenaria(L,n,P0,Pf,display)
     % Ejemplo de uso
     % [angulo,x,y,time]=Catenaria(150,50,[0,0],[40,-20],true)
     
-    if (P0(1)>Pf(1))
+    if P0(1) > Pf(1)
         aux = Pf;
         Pf = P0;
         P0 = aux;
     end
     
     le = L/n;               % longitud de elemento 
-
-    lambda = Pf(2)-P0(2);   % distancia vertical entre punto de anclaje
-    d = Pf(1)-P0(1);        % distancia horizontal 
-    syms alph z
-    a = 0;
+    h = Pf(2)-P0(2);        % distancia vertical entre punto de anclaje
+    d = Pf(1)-P0(1);        % distancia horizontal
     
-    j=0;
-    while a <= 0
-        a = double(vpasolve(2*sinh(alph*d/2)==alph*sqrt(L^2-lambda^2), alph,j));
-        j=j+le;
-    end
-
+    syms alph z
+    a = double(vpasolve(2*sinh(alph*d/2)==alph*sqrt(L^2-h^2), alph,le));
     C = fsolve(@(C)constants(C,a,P0,Pf),P0);     % Condiciones de borde
 
-    x = [];     y = [];
-
-    x(1)=P0(1);
-    % altura de la catenaria en terminos de x
+    x = [];   
     f = @(x)(1/a*cosh(a*(x+C(1)))+C(2));        
 
     tic
+    x(1)=P0(1);
     for k=2:n+1
         m=atan(sinh(a*(x(k-1)+C(1))));  % Pendiente: derivada df/dx
         next_x=x(k-1)+le*cos(m);        % Aproximación del proximo x
