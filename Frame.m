@@ -1,4 +1,4 @@
-function [K]= Frame(n,dim,nodos,conectividades,restricciones,Fe)
+function [u,Fr,K]= Frame(nodos,conectividades,restricciones,Fe)
 % modelación de elementos tipo frame para (dim) numero de dimensiones donde:
 % n-> numero de nodos
 % dim -> numero de dimensiones
@@ -8,10 +8,11 @@ function [K]= Frame(n,dim,nodos,conectividades,restricciones,Fe)
 % Fe-> fuerzas externas aplicadas Fe(i,:)=[Fxi,Fyi,Fzi]
 
 
-    
+    [n,dim]=size(nodos);        % numero de nodos, numero de dimensiones por nodo
+   
     dof=3;
     K=zeros(dof*n,dof*n);    			% Matriz de rigidez global
-    Fe=reshape(Fe',[dim*n,1]);
+    Fe=reshape(Fe',[dof*n,1]);
     
     %---conetividades---   
     NodosA= conectividades(:,1);        % vector nodos de partida de conectividad 
@@ -20,11 +21,11 @@ function [K]= Frame(n,dim,nodos,conectividades,restricciones,Fe)
     Elasticidad=conectividades(:,4);   % vector de modulo de elasticidad
     Inercia=conectividades(:,5);        % vector de momento de inercia
     for c=1:length(NodosA)
-
+        disp(c)
         i=NodosA(c);    j=NodosB(c);        
         A=Area(c);      E=Elasticidad(c);        I=Inercia(c);
-        ri=nodos(i,:)';                    % vector de posición nodo A
-        rj=nodos(j,:)';                    % vector de posición nodo B
+        ri=nodos(i,1:2)';                    % vector de posición nodo A
+        rj=nodos(j,1:2)';                    % vector de posición nodo B
         Le=norm(rj-ri);              % Le de elemento
         Longitud(c)=Le;
         
@@ -33,18 +34,14 @@ function [K]= Frame(n,dim,nodos,conectividades,restricciones,Fe)
                      6*Le,  4*Le^2, -6*Le,  2*Le^2;
                       -12,   -6*Le,    12,    -6*Le;
                      6*Le,  2*Le^2, -6*Le,  4*Le^2];   
-        %visualización 
-%         v=[ri,rj];
-%         plot3(v(1,:),v(2,:),v(3,:))
-%         hold on
-%         
+   
         uni=(rj-ri)'./norm(rj-ri);              %vector de cosenos directores  [l,m,n]
         
         % transformación a coordenadas globales 
         L=zeros(6);
-        L(1:2,1:2)=[uni; -uni(1),uni(2)];
+        L(1:2,1:2)=[uni; -uni(2),uni(1)];
         L(3,3)=1;
-        L(4:5,4:5)=[uni; -uni(1),uni(2)];
+        L(4:5,4:5)=[uni; -uni(2),uni(1)];
         L(6,6)=1;
         
         K1 = E*A/Le;         K2 = 12*E*I/Le^3;
@@ -57,7 +54,7 @@ function [K]= Frame(n,dim,nodos,conectividades,restricciones,Fe)
                0 -K2   -K3   0  K2  -K3;
                0  K3    K4   0 -K3 2*K4];
         
-        Ki=L'*Kbe*L;                 % matriz de rigidez en coordenadas globales
+        Ki=L'*Kbe*L;                        % matriz de rigidez en coordenadas globales
 
         eqA= dof*(i-1)+1:dof*i;             % indices de ecuaciones relacionadas al nodo A
 
@@ -68,22 +65,26 @@ function [K]= Frame(n,dim,nodos,conectividades,restricciones,Fe)
         K([eqA,eqB],[eqA,eqB])=K([eqA,eqB],[eqA,eqB]) + Ki;
 
     end
-%  
-%      %---Restricciones--- 
-%     kP=10^10*max(abs(rigidez));       % Penalización
-%     KP=K;
-%     for R=restricciones
-%         KP(R,R)=KP(R,R)+ kP;    
-%         KP(R,:)=KP(R,:)/kP;
-%     end
-%     
-%     %---Deformaciones---
-%     u=mldivide(KP,Fe);
-%     
-%     %-- Fuerzas de reacción
-%     %Fr=-kP*u(restricciones); 
-%     Fr= K*u; 
-%     
+  
+    %---Restricciones--- 
+    kP=10^10*max(abs(Ki),[],"all");       % Penalización
+    KP=K;
+    for j=1:length(restricciones)
+          R=restricciones(j);
+        KP(R,R)=KP(R,R)+ kP;    
+        KP(R,:)=KP(R,:)/kP;
+    end
+    
+    %---Deformaciones---
+    u=mldivide(KP,Fe);
+    
+    %-- Fuerzas de reacción
+    %Fr=-kP*u(restricciones); 
+    Fr= K*u; 
+    
+    u=reshape(u,dof,[])';
+   
+    Fr=reshape(Fr,dof,[])';
 %     %--- esfuerzo normal ---
 %     u_prima=reshape(u,dim,n);
 %     

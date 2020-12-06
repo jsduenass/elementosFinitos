@@ -10,11 +10,12 @@ close all
 %% Test 1: Catenaria
     
 L = 150; % Longitud de la cuerda
-n = 100; % Numero de elementos
+n = 10; % Numero de elementos
 P0 = [0,0];
 Pf = [40.5,10];
 display=true;
 [angulo,x,y,time]=Catenaria(L,n,P0,Pf,display);
+save("initialCondition.mat","angulo","L")
 %help Catenaria
 %assert(all(diff(x)>0))
 hold on

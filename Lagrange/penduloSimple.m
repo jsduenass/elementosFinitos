@@ -40,9 +40,12 @@ animate(fileName,imgs,Fps)
 
 
 %% functions
+
 function dy=penduloSimple1(t,y,le,m,g)
     phi=y(1);   dphi=y(2);
     
     dy=[           dphi           ;
         -3*g/(2*le)*cos(phi)];
 end
+
+
