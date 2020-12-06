@@ -1,5 +1,6 @@
 % pendulo doble
-g=1;
+clear, clc, close all
+g=9.8;
 l=1;
 
 Fps=10;
@@ -23,7 +24,7 @@ for k=1:length(x)
     axis equal
     xlim([-3,3])
     ylim([-3,3])
-    pause(0.1)
+    pause(dt)
 end
     
 

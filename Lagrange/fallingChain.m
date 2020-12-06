@@ -1,18 +1,20 @@
 clear ,clc
 close all
 % chain system
-load initialCondition    % L angulo
-L=1;
-g=1;
+load initialCondition    % datos:L angulo
+
+g=-9.8;
 
 Fps=10;
 dt=1/Fps;
-tspan=[0 30];   % tiempo
+tspan=[0:dt:30];   % tiempo
 n=length(angulo);
 
-y0= [angulo'-pi/2;zeros(n,1)];
+y0= [pi/2-angulo';zeros(n,1)];      %vector inicial angulo y velocidad
 
 [t,states] = ode23t(@(t,y)chainSystem(t,y,L,g), tspan, y0);
+%[t2,states] = MEBDF_DRIVER(tspan,y0,options)
+
 
 phi=states(:,1:n);
 dphi=states(:,n+1:2*n);
@@ -28,7 +30,7 @@ for k=1:length(x)
     axis equal
     xlim(1.5*[min(x,[],"all"),max(x,[],"all")+10])
     ylim([min(y,[],"all"),max(y,[],"all")])
-    pause(0.1)
+    pause(0.1*dt)
 end
 
 function dy=chainSystem(t,y,l,g)
@@ -37,7 +39,7 @@ function dy=chainSystem(t,y,l,g)
     phiI=phi;
     phiJ=phiI';
 
-    aij=(2*(n-(1:n)+1))./2.*ones(n);
+    aij=(2*(n-(1:n)+1))/2.*ones(n);
     aij=tril(aij,-1)+tril(aij,-1)'+  (3.*(n-(1:n))+1)./3.*eye(n);
     
     M1=aij.*sin(phiI-phiJ);
@@ -46,7 +48,7 @@ function dy=chainSystem(t,y,l,g)
     bi=(2*(n-(1:n)')+1)./2;
     b=g/l*sin(phi).*bi;
 
-    eq_dphi=mldivide(M2,M1'*dphi.^2+b);
+    eq_dphi=-mldivide(M2,M1*dphi.^2+b);
     dy=[dphi;eq_dphi];
 
 end
