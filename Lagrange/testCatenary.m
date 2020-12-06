@@ -9,9 +9,9 @@ close all
 % g = [0, -9.81]; % Aceleracion de la gravedad
 %% Test 1: Catenaria
 L = 150; % Longitud de la cuerda
-n = 10; % Numero de elementos
+n = 20; % Numero de elementos
 P0 = [0,0];
-Pf = [40.5,10];
+Pf = [40.5,-20];
 display=true;
 [angulo,x,y,time]=Catenaria(L,n,P0,Pf,display);
 save("initialCondition.mat","angulo","L")
