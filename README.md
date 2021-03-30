@@ -10,8 +10,8 @@ Esta conformado por las implementaciones:
 
 
 ## A desarrollar
-[] Compatibilidad con entrada gmsh y salida pos
-[] Elementos tipo frame
+- Compatibilidad con entrada gmsh y salida pos
+- Elementos tipo frame
 
 ## Sobre este proyecto
 Esta organizado en forma de proyecto de matlab, para inicializarlo se realiza doble click sobre el archivo ```ElementosFinitos.prj``` en el explorar de archivos  o se puede escribir escribir el siguiente comando en consola.
@@ -34,12 +34,12 @@ addFile(projEF,check)
 addStartupFile(projEF,check)
 ```
 
-utiliza herramientas de control de versiones, la filosofia de CI (continuos integration/ integración continua) y la validación del codigo mediante tests para brindar un codigo robusto. Ademas esta contenido en un proyecto de matlab. 
+Utiliza herramientas de control de versiones, la filosofia de CI (continuos integration/ integración continua) y la validación del codigo mediante tests para brindar un codigo robusto. Ademas esta contenido en un proyecto de matlab. 
 
 para ver mas información sobre como integrar control de versiones o CI en matlab ver los siguientes videos.
 
-* [trabajo colaborativo](https://es.mathworks.com/videos/bulletproofing-collaborative-softwarevelopment-with-matlab-and-simulink-1589347030586.html)
-* [documentación git en matlab](https://es.mathworks.com/help/matlab/matlab_prog/set-up-git-source-control.html)
+* [Trabajo colaborativo](https://es.mathworks.com/videos/bulletproofing-collaborative-softwarevelopment-with-matlab-and-simulink-1589347030586.html)
+* [Documentación git en matlab](https://es.mathworks.com/help/matlab/matlab_prog/set-up-git-source-control.html)
 
 
 
